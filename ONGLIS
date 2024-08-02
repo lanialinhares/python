@@ -1,0 +1,148 @@
+import pickle
+import os
+ 
+# Caminho do arquivo binário
+FILE_PATH = 'controle_dacoes.pkl'
+ 
+# Funções para manipulação de dados
+def carregar_dados():
+    """Carrega os dados do arquivo binário, se existir."""
+    if os.path.exists(FILE_PATH):
+        with open(FILE_PATH, 'rb') as f:
+            return pickle.load(f)
+    return {
+        'voluntarios': [],
+        'entidades': [],
+        'produtos': [],
+        'doacoes': []
+    }
+ 
+def salvar_dados(dados):
+    """Salva os dados no arquivo binário."""
+    with open(FILE_PATH, 'wb') as f:
+        pickle.dump(dados, f)
+ 
+def adicionar_voluntario(dados, nome, email, telefone):
+    """Adiciona um novo voluntário."""
+    dados['voluntarios'].append({'nome': nome, 'email': email, 'telefone': telefone})
+    salvar_dados(dados)
+ 
+def adicionar_entidade(dados, nome, endereco):
+    """Adiciona uma nova entidade assistencial."""
+    dados['entidades'].append({'nome': nome, 'endereco': endereco})
+    salvar_dados(dados)
+ 
+def adicionar_produto(dados, codigo, nome, valor):
+    """Adiciona um novo produto de higiene."""
+    dados['produtos'].append({'codigo': codigo, 'nome': nome, 'valor': valor})
+    salvar_dados(dados)
+ 
+def adicionar_doacao(dados, codigo_produto, entidade, data_doacao, pessoa_responsavel, valor_produto, quantidade, data_entrega):
+    """Adiciona uma nova doação."""
+    dados['doacoes'].append({
+        'codigo_produto': codigo_produto,
+        'entidade': entidade,
+        'data_doacao': data_doacao,
+        'pessoa_responsavel': pessoa_responsavel,
+        'valor_produto': valor_produto,
+        'quantidade': quantidade,
+        'data_entrega': data_entrega
+    })
+    salvar_dados(dados)
+ 
+def listar_voluntarios(dados):
+    """Lista todos os voluntários."""
+    for voluntario in dados['voluntarios']:
+        print(voluntario)
+ 
+def listar_entidades(dados):
+    """Lista todas as entidades assistenciais."""
+    for entidade in dados['entidades']:
+        print(entidade)
+ 
+def listar_produtos(dados):
+    """Lista todos os produtos de higiene."""
+    for produto in dados['produtos']:
+        print(produto)
+ 
+def listar_doacoes(dados):
+    """Lista todas as doações."""
+    for doacao in dados['doacoes']:
+        print(doacao)
+ 
+# Menu principal
+def menu():
+    dados = carregar_dados()
+    
+    while True:
+        print("\nControle de Doações")
+        print("1. Adicionar Voluntário")
+        print("2. Adicionar Entidade Assistencial")
+        print("3. Adicionar Produto de Higiene")
+        print("4. Adicionar Doação")
+        print("5. Listar Voluntários")
+        print("6. Listar Entidades Assistenciais")
+        print("7. Listar Produtos de Higiene")
+        print("8. Listar Doações")
+        print("9. Sair")
+ 
+        escolha = input("Escolha uma opção: ")
+ 
+        if escolha == '1':
+            nome = input("Nome do Voluntário: ")
+            email = input("E-mail do Voluntário: ")
+            telefone = input("Telefone do Voluntário: ")
+            adicionar_voluntario(dados, nome, email, telefone)
+        elif escolha == '2':
+            nome = input("Nome da Entidade Assistencial: ")
+            endereco = input("Endereço da Entidade Assistencial: ")
+            adicionar_entidade(dados, nome, endereco)
+        elif escolha == '3':
+            codigo = input("Código do Produto: ")
+            nome = input("Nome do Produto: ")
+            valor = float(input("Valor do Produto: "))
+            adicionar_produto(dados, codigo, nome, valor)
+        elif escolha == '4':
+            codigo_produto = input("Código do Produto: ")
+            entidade = input("Entidade Assistencial: ")
+            data_doacao = input("Data da Doação (DD/MM/AAAA): ")
+            pessoa_responsavel = input("Pessoa Responsável pela Doação: ")
+            valor_produto = float(input("Valor do Produto: "))
+            quantidade = int(input("Quantidade de Produtos Entregues: "))
+            data_entrega = input("Data da Entrega (DD/MM/AAAA): ")
+            adicionar_doacao(dados, codigo_produto, entidade, data_doacao, pessoa_responsavel, valor_produto, quantidade, data_entrega)
+        elif escolha == '5':
+            listar_voluntarios(dados)
+        elif escolha == '6':
+            listar_entidades(dados)
+        elif escolha == '7':
+            listar_produtos(dados)
+        elif escolha == '8':
+            listar_doacoes(dados)
+        elif escolha == '9':
+            break
+        else:
+            print("Opção inválida, tente novamente.")
+ 
+if __name__ == "__main__":
+    menu()
+def carregar_dados():
+    """Carrega os dados do arquivo binário, se existir."""
+    if os.path.exists(FILE_PATH):
+        try:
+            with open(FILE_PATH, 'rb') as f:
+                return pickle.load(f)
+        except (pickle.PickleError, EOFError):
+            print("Erro ao carregar o arquivo de dados. O arquivo pode estar corrompido.")
+            return {
+                'voluntarios': [],
+                'entidades': [],
+                'produtos': [],
+                'doacoes': []
+            }
+    return {
+        'voluntarios': [],
+        'entidades': [],
+        'produtos': [],
+        'doacoes': []
+    }
